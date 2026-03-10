@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 5 - Pixel Perfect UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="p-10">
+
+<div class="max-w-[1150px] mx-auto">
+
+    <div class="flex items-center justify-between mb-2 px-1">
+        <div class="flex items-center border border-gray-200 rounded px-2 py-1 bg-white cursor-pointer shadow-sm">
+            <input type="checkbox" class="w-3.5 h-3.5 border-gray-300 rounded-sm cursor-pointer" />
+            <i class="fa-solid fa-chevron-down text-[8px] text-gray-400 ml-2"></i>
+        </div>
+
+        <div class="flex items-center gap-6 text-[13px] text-gray-500 font-medium">
+            <button class="flex items-center gap-2 hover:text-black transition">
+                <i class="fa-regular fa-clone text-[14px]"></i> Display
+            </button>
+            <button class="flex items-center gap-2 hover:text-black transition">
+                <i class="fa-solid fa-arrow-down-short-wide text-[14px]"></i> Sort by
+            </button>
+            <button class="flex items-center gap-1 hover:text-black transition">
+                <i class="fa-solid fa-ellipsis-vertical px-2 text-[14px]"></i> Actions
+            </button>
+        </div>
+    </div>
+
+    <div class="w-full overflow-hidden rounded-md border border-gray-200 bg-white">
+        <table class="w-full text-left border-collapse">
+            <thead>
+            <tr class="bg-[#fafafa] border-b border-gray-200 text-[12px] text-gray-500 tracking-tight">
+                <th class="px-5 py-3.5 w-12"></th>
+                <th class="px-4 py-3.5 font-medium border-r border-gray-100">Address</th>
+                <th class="px-4 py-3.5 font-medium text-center whitespace-nowrap">Skip-Traced?</th>
+                <th class="px-4 py-3.5 font-medium whitespace-nowrap">
+                    Deal Type <i class="fa-solid fa-circle-info text-[9px] ml-1 text-gray-300"></i>
+                </th>
+                <th class="px-4 py-3.5 font-medium whitespace-nowrap">Est Price/Sqft</th>
+                <th class="px-4 py-3.5 font-medium whitespace-nowrap">
+                    Motivation(s) <i class="fa-solid fa-circle-info text-[9px] ml-1 text-gray-300"></i>
+                </th>
+                <th class="px-4 py-3.5 font-medium">Property Status</th>
+            </tr>
+            </thead>
+            <tbody class="text-[13px]">
+
+            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-5 text-center">
+                    <input type="checkbox" class="w-4 h-4 border-gray-300 rounded cursor-pointer" />
+                </td>
+                <td class="px-4 py-5 border-r border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-[#374151] underline decoration-gray-400 underline-offset-2 cursor-pointer hover:text-black">5418 W WASHINGTON BLVD</div>
+                            <div class="text-[#9ca3af] text-[11px] mt-0.5 uppercase tracking-tighter font-medium">LOS ANGELES, CA, 90016</div>
+                        </div>
+                        <i class="fa-regular fa-image text-gray-300 text-[18px]"></i>
+                    </div>
+                </td>
+                <td class="px-4 py-5 text-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-gray-400 text-[15px]"></i>
+                </td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">0</td>
+                <td class="px-4 py-5"></td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">8</td>
+                <td class="px-4 py-5 text-gray-700">Off Market (Motivated)</td>
+            </tr>
+
+            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-5 text-center"><input type="checkbox" class="w-4 h-4 border-gray-300 rounded cursor-pointer" /></td>
+                <td class="px-4 py-5 border-r border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-[#374151] underline decoration-gray-400 underline-offset-2 cursor-pointer hover:text-black">4221 ABNER ST</div>
+                            <div class="text-[#9ca3af] text-[11px] mt-0.5 uppercase tracking-tighter font-medium">LOS ANGELES, CA, 90032</div>
+                        </div>
+                        <i class="fa-regular fa-image text-gray-300 text-[18px]"></i>
+                    </div>
+                </td>
+                <td class="px-4 py-5 text-center"></td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">0</td>
+                <td class="px-4 py-5 text-center text-gray-600 font-medium">$439</td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">10</td>
+                <td class="px-4 py-5 text-gray-700">Off Market (Motivated)</td>
+            </tr>
+
+            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-5 text-center"><input type="checkbox" class="w-4 h-4 border-gray-300 rounded cursor-pointer" /></td>
+                <td class="px-4 py-5 border-r border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-[#374151] underline decoration-gray-400 underline-offset-2 cursor-pointer hover:text-black">121 S HOPE ST APT 506</div>
+                            <div class="text-[#9ca3af] text-[11px] mt-0.5 uppercase tracking-tighter font-medium">LOS ANGELES, CA, 90012</div>
+                        </div>
+                        <i class="fa-regular fa-image text-gray-300 text-[18px]"></i>
+                    </div>
+                </td>
+                <td class="px-4 py-5 text-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-gray-400 text-[15px]"></i>
+                </td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">0</td>
+                <td class="px-4 py-5 text-center text-gray-600 font-medium">$562</td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">10</td>
+                <td class="px-4 py-5 text-gray-700">Off Market (Motivated)</td>
+            </tr>
+
+            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-5 text-center"><input type="checkbox" class="w-4 h-4 border-gray-300 rounded cursor-pointer" /></td>
+                <td class="px-4 py-5 border-r border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-[#374151] underline decoration-gray-400 underline-offset-2 cursor-pointer hover:text-black">3132 E PICO BLVD</div>
+                            <div class="text-[#9ca3af] text-[11px] mt-0.5 uppercase tracking-tighter font-medium">LOS ANGELES, CA, 90023</div>
+                        </div>
+                        <i class="fa-regular fa-image text-gray-300 text-[18px]"></i>
+                    </div>
+                </td>
+                <td class="px-4 py-5 text-center"></td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">0</td>
+                <td class="px-4 py-5"></td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">5</td>
+                <td class="px-4 py-5 text-gray-700">Off Market (Motivated)</td>
+            </tr>
+
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-5 text-center"><input type="checkbox" class="w-4 h-4 border-gray-300 rounded cursor-pointer" /></td>
+                <td class="px-4 py-5 border-r border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-[#374151] underline decoration-gray-400 underline-offset-2 cursor-pointer hover:text-black">777 E PICO BLVD</div>
+                            <div class="text-[#9ca3af] text-[11px] mt-0.5 uppercase tracking-tighter font-medium">LOS ANGELES, CA, 90021</div>
+                        </div>
+                        <i class="fa-regular fa-image text-gray-300 text-[18px]"></i>
+                    </div>
+                </td>
+                <td class="px-4 py-5 text-center"></td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">0</td>
+                <td class="px-4 py-5"></td>
+                <td class="px-4 py-5 text-center text-gray-700 font-medium">6</td>
+                <td class="px-4 py-5 text-gray-700">Off Market (Motivated)</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
