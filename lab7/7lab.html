@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторна 7</title>
+    <style>
+        #elid {
+            width: 100px;
+            height: 100px;
+            background-color: steelblue;
+            transition: transform 0.3s ease;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Завдання 3 -->
+<h3>Завдання 3</h3>
+<input id="countyInput" type="text" placeholder="Наприклад: Baldwin County, Alabama">
+<button id="searchBtn">Знайти код</button>
+<div id="countyResult"></div>
+
+<!-- Завдання 4 -->
+<h3>Завдання 4</h3>
+<form id="userForm">
+    <input id="first_name" type="text" placeholder="Ім'я">
+    <input id="last_name" type="text" placeholder="Прізвище">
+    <input id="email" type="email" placeholder="Email">
+    <button type="submit">Відправити</button>
+</form>
+
+<!-- Завдання 5 -->
+<h3>Завдання 5</h3>
+<div id="elid"></div>
+<button id="btnLeft">Вліво</button>
+<button id="btnRight">Вправо</button>
+
+<script>
+    // Завдання 1: Пріоритет завантаження скриптів
+    // У вас є два підключених файли. Якщо small.js завантажується швидше за big.js,
+    // який з них виконається першим і чому?
+    //
+    // <script src="big.js"><\/script>
+    // <script src="small.js"><\/script>
+    //
+    // Відповідь: Першим виконається big.js, оскільки браузер обробляє скрипти
+    // без атрибутів async чи defer синхронно в порядку їхнього розташування
+    // в HTML-документі, блокуючи виконання наступних до завершення поточного.
+
+
+    // Завдання 2: Логіка та змінні
+    // 1. Чому дорівнюватиме x: var a = 2; var x = 1 + (a *= 2);
+    // Відповідь: x = 5, бо спочатку a = 2*2 = 4, потім x = 1 + 4 = 5.
+    //
+    // 2. Чи з'явиться alert?
+    // if ("0") { alert('Привіт'); }
+    // Відповідь: Так, бо будь-який непорожній рядок — це true.
+    //
+    // 3. Змінні name та admin:
+    let name = "Василь";
+    let admin = name;
+    console.log(admin);
+
+
+    // Завдання 3: Робота з API (Fetch) та фільтрація
+    let countiesData = [];
+
+    async function fetchCounties() {
+        try {
+            const response = await fetch('https://api.census.gov/data/2020/acs/acs5/profile?get=NAME&for=county:*');
+            const rawData = await response.json();
+            countiesData = rawData.slice(1).map(row => ({
+                name: row[0],
+                state: row[1],
+                county: row[2]
+            }));
+            console.log("Дані API завантажено.");
+        } catch (error) {
+            console.error("Помилка завантаження API:", error);
+        }
+    }
+
+    function getCountyCode(searchName) {
+        const foundCounty = countiesData.find(item => item.name === searchName);
+        return foundCounty ? foundCounty.state + foundCounty.county : "Округ не знайдено";
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        const inputName = document.getElementById('countyInput').value;
+        const finalCode = getCountyCode(inputName);
+        console.log("Код округу:", finalCode);
+        document.getElementById('countyResult').textContent = "Код округу: " + finalCode;
+    });
+
+    fetchCounties();
+
+
+    // Завдання 4: Валідація форми
+    document.getElementById('userForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const fName = document.getElementById('first_name').value.trim();
+        const lName = document.getElementById('last_name').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        if (!fName || !lName || !email) {
+            alert("Увага: Будь ласка, заповніть всі поля форми!");
+        } else {
+            alert(`Дані користувача:\nІм'я: ${fName}\nПрізвище: ${lName}\nEmail: ${email}`);
+        }
+    });
+
+
+    // Завдання 5: Анімація
+    let currentPosition = 0;
+    const animatedDiv = document.getElementById('elid');
+
+    document.getElementById('btnLeft').addEventListener('click', () => {
+        if (currentPosition - 100 >= 0) {
+            currentPosition -= 100;
+            animatedDiv.style.transform = `translateX(${currentPosition}px)`;
+        }
+    });
+
+    document.getElementById('btnRight').addEventListener('click', () => {
+        const maxPosition = document.body.clientWidth - 100;
+        if (currentPosition + 100 <= maxPosition) {
+            currentPosition += 100;
+            animatedDiv.style.transform = `translateX(${currentPosition}px)`;
+        }
+    });
+</script>
+
+</body>
+</html>
