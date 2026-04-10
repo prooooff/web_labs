@@ -1,100 +1,139 @@
 <script setup>
-defineProps({
-  billing: {
-    type: String,
-    default: 'annual'
+// Приймаємо стан перемикача з головної сторінки
+const props = defineProps({
+  isAnnual: {
+    type: Boolean,
+    default: true
   }
 })
 
-const { data: plans } = await useFetch('/api/plans')
+// Функція для очищення чисел від ком (напр. "1,188" -> 1188)
+const getNum = (val) => {
+  if (!val) return 0;
+  return Number(String(val).replace(/,/g, ''));
+}
+
+
+const plans = [
+  {
+    id: 1,
+    name: 'Starter - Annual',
+    price: '83.25',
+    originalPrice: '1,188',
+    yearlyPrice: '999',
+    savings: '189',
+    topColor: 'bg-emerald-400',
+    savingsColor: 'bg-emerald-100 text-emerald-700',
+    features: [
+      { text: 'Primary user only', subtext: '(extra team members for $35/month)' },
+      { text: 'Save unlimited properties' },
+      { text: '10,000 exports', subtext: '(additional exports at $0.02 each)' },
+      { text: '500 free skip traces', subtext: '(additional skip tracing at $0.08 each)' },
+      { text: 'Imports $0.01' }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Team - Annual',
+    price: '207.50',
+    originalPrice: '2,988',
+    yearlyPrice: '2,490',
+    savings: '498',
+    topColor: 'bg-teal-400',
+    savingsColor: 'bg-green-100 text-green-700',
+    features: [
+      { text: 'Primary user + 2 free team members', subtext: '(extra team members for $25/month)' },
+      { text: 'Save unlimited properties' },
+      { text: '50,000 exports', subtext: '(additional exports at $0.01 each)' },
+      { text: '1,000 free skip traces', subtext: '(additional skip tracing at $0.08 each)' },
+      { text: 'Imports $0.01', subtext: '' },
+      { text: 'FREE daily product trainings and support' },
+      { text: 'Full suite of next-gen investing tools' },
+      { text: 'Industry first AI powered comp tool' },
+      { text: 'Includes dedicated support agent' }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Business - Annual',
+    price: '457.50',
+    originalPrice: '6,588',
+    yearlyPrice: '5,490',
+    savings: '1,098',
+    topColor: 'bg-cyan-400',
+    savingsColor: 'bg-cyan-100 text-cyan-700',
+    features: [
+      { text: 'Primary user + 6 free team members', subtext: '(extra team members for $20/month)' },
+      { text: 'Save unlimited properties' },
+      { text: '100,000 exports', subtext: '(additional exports at $0.01 each)' },
+      { text: '2,000 free skip traces', subtext: '(additional skip tracing at $0.08 each)' },
+      { text: 'Imports $0.01' }
+    ]
+  }
+]
 </script>
 
 <template>
-  <div class="w-full flex justify-center">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-[1200px] w-full pb-12 px-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 pb-20 font-sans">
+    <div
+      v-for="plan in plans"
+      :key="plan.name"
+      class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 relative overflow-hidden flex flex-col transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl"
+    >
+      <div class="absolute top-0 left-0 w-full h-1.5" :class="plan.topColor"></div>
 
-      <div
-        v-for="plan in plans"
-        :key="plan.title"
-        class="relative bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] border border-gray-100 overflow-hidden p-8 pt-10 hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)] transition-shadow duration-300 flex flex-col"
-      >
+      <h3 class="text-xl font-bold text-gray-900 mb-4 transition-colors">
+        {{ isAnnual ? plan.name : plan.name.replace(' - Annual', '') }}
+      </h3>
 
-        <div
-          class="absolute top-0 left-0 w-full h-[6px]"
-          style="background: linear-gradient(90deg, #39d353 0%, #26a641 50%, #00bcd4 100%);"
-        ></div>
-
-        <div class="mb-6">
-          <h3 class="text-2xl font-bold text-[#24292f]">
-            {{ plan.title }}
-          </h3>
-          <div class="mt-3">
-            <span class="bg-[#f6f8fa] text-[#57606a] text-[13px] px-2.5 py-1 rounded-md border border-gray-200/50">
-              3-days free then:
-            </span>
-          </div>
-        </div>
-
-        <div class="mb-6">
-          <div class="flex items-baseline gap-1">
-            <span class="text-4xl font-bold text-[#1f2328]">
-              ${{ plan.price }}
-            </span>
-            <span class="text-[#57606a] text-base">
-              /month
-            </span>
-          </div>
-          <p class="text-[#57606a] text-sm mt-1 font-medium">
-            billed yearly at
-            <span class="line-through text-gray-400">
-              {{ plan.oldPrice }}
-            </span>
-            {{ plan.discountPrice }}
-          </p>
-        </div>
-
-        <div class="mb-8">
-          <span class="text-[#2da44e] bg-[#dafbe1] font-bold text-[13px] px-2.5 py-1 rounded border border-[#2da44e]/20">
-            {{ plan.savings }} in savings
-          </span>
-        </div>
-
-        <div class="mb-8">
-          <button
-            class="w-full py-[13px] rounded-xl font-bold shadow-sm transition-all duration-200 hover:opacity-90 active:scale-[0.99]"
-            style="background: linear-gradient(90deg, #ffcc00 0%, #ff8c00 100%); color: #1f2328; font-size: 16px;"
-          >
-            Try It Free
-          </button>
-        </div>
-
-        <hr class="border-gray-100 mb-8">
-
-        <ul class="space-y-4 flex-grow">
-          <li
-            v-for="(feature, i) in plan.features"
-            :key="i"
-            class="flex items-start gap-3"
-          >
-            <svg
-              class="mt-1 flex-shrink-0 text-[#a2f1a6]"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M12,1L14.5,9.5L23,12L14.5,14.5L12,23L9.5,14.5L1,12L9.5,9.5L12,1Z"/>
-            </svg>
-
-            <div
-              class="text-[15px] text-[#24292f] leading-tight"
-              v-html="feature"
-            />
-          </li>
-        </ul>
-
+      <div class="inline-block bg-gray-100 text-gray-500 text-[11px] font-bold px-2 py-1 rounded mb-4 self-start">
+        3-days free then:
       </div>
 
+      <div class="mb-1">
+        <span class="text-5xl font-extrabold text-gray-900 tracking-tight">
+          ${{ isAnnual ? plan.price : (getNum(plan.originalPrice) / 12).toFixed(2) }}
+        </span>
+        <span class="text-gray-500 font-medium text-base">/month</span>
+      </div>
+
+      <p class="text-sm text-gray-500 mb-4 h-[20px] mt-1.5">
+        <template v-if="isAnnual">
+          billed yearly at <del class="text-gray-400">${{ plan.originalPrice }}</del> <span class="font-bold text-gray-700">${{ plan.yearlyPrice }}</span>
+        </template>
+        <template v-else>
+          billed $<span class="font-bold text-gray-700">{{ plan.originalPrice }}</span> yearly
+        </template>
+      </p>
+
+      <div class="mb-8 h-[28px]">
+        <span
+          v-if="isAnnual"
+          class="inline-block text-xs font-bold px-3 py-1.5 rounded-md"
+          :class="plan.savingsColor"
+        >
+          ${{ plan.savings }} in savings
+        </span>
+      </div>
+
+      <NuxtLink
+        :to="`/checkout?planId=${plan.id}&billing=${isAnnual ? 'annual' : 'monthly'}`"
+        class="block w-full text-center py-3 bg-[#ff9900] hover:bg-[#e68a00] text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 mb-8 shadow-sm"
+      >
+        Try It Free
+      </NuxtLink>
+
+      <ul class="space-y-4 flex-1">
+        <li v-for="(feature, idx) in plan.features" :key="idx" class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <span class="text-sm font-semibold text-gray-700 block leading-tight">{{ feature.text }}</span>
+            <span v-if="feature.subtext" class="text-xs text-gray-400 block mt-1">{{ feature.subtext }}</span>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>

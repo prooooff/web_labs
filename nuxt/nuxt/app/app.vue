@@ -24,14 +24,14 @@ useHead({
             class="text-gray-500 hover:text-gray-900 transition-colors py-4"
             active-class="text-emerald-600 font-bold border-b-2 border-emerald-500"
           >
-            Список продуктів
+            Тарифи
           </NuxtLink>
           <NuxtLink
             to="/products"
             class="text-gray-500 hover:text-gray-900 transition-colors py-4"
             active-class="text-emerald-600 font-bold border-b-2 border-emerald-500"
           >
-            Таблиця
+            Таблиця продуктів
           </NuxtLink>
         </nav>
       </template>
@@ -49,7 +49,7 @@ useHead({
 
     <UFooter>
       <template #left>
-        <p class="text-sm text-muted">Built with Nuxt UI • © {{ new Date().getFullYear() }}</p>
+        <p class="text-sm text-muted">   {{ new Date().getFullYear() }}</p>
       </template>
     </UFooter>
   </UApp>
