@@ -1,15 +1,25 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useSubscriptionStore } from '~/stores/useSubscriptionStore'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
 useHead({
   title: 'Checkout | Оплата підписки'
 })
 
-const route = useRoute()
+const store = useSubscriptionStore()
+const router = useRouter()
 
-const isAnnual = computed(() => route.query.billing !== 'monthly')
 
-const { data: plan } = await useFetch(`/api/plans?id=${route.query.planId}`)
+const { selectedPlan: plan, isAnnualBilling: isAnnual } = storeToRefs(store)
+
+
+onMounted(() => {
+  if (!plan.value) {
+    router.push('/')
+  }
+})
 
 const form = ref({
   cardNumber: '',
@@ -24,6 +34,7 @@ const isSubmitting = ref(false)
 
 const getNum = (val) => Number(String(val || 0).replace(/,/g, ''))
 
+// Перерахунок суми залишається без змін, бо змінні plan і isAnnual зберегли свої імена
 const orderTotal = computed(() => {
   if (!plan.value) return 0
   return isAnnual.value
@@ -54,7 +65,11 @@ const submitForm = async () => {
   try {
     const response = await $fetch('/api/subscription/create', {
       method: 'POST',
-      body: { ...form.value, billing: isAnnual.value ? 'annual' : 'monthly' }
+      body: {
+        ...form.value,
+        planName: plan.value.name, // Додано ім'я плану для API
+        billing: isAnnual.value ? 'annual' : 'monthly'
+      }
     })
     alert(response?.message || 'Success!')
   } catch (error) {
@@ -66,7 +81,7 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-[#121212] pb-12 font-sans transition-colors duration-300">
+  <div v-if="plan" class="min-h-screen bg-white dark:bg-[#121212] pb-12 font-sans transition-colors duration-300">
     <div class="bg-[#333333] dark:bg-black text-white text-center py-4 text-lg font-bold mb-8 shadow-md">
       Checkout
     </div>
@@ -83,7 +98,7 @@ const submitForm = async () => {
         Set up your account to gain instant access! You won't be charged if you decide to cancel within 3 days
       </p>
 
-      <div v-if="plan" class="flex flex-col md:flex-row gap-8 items-start">
+      <div class="flex flex-col md:flex-row gap-8 items-start">
 
         <PricingCard :plan="plan" :is-annual="isAnnual" :is-checkout-mode="true" />
 

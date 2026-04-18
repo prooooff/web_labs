@@ -1,5 +1,12 @@
 <script setup>
-// Приймаємо стан перемикача з головної сторінки
+import { useSubscriptionStore } from '~/stores/useSubscriptionStore'
+import { useRouter } from 'vue-router'
+
+
+const store = useSubscriptionStore()
+const router = useRouter()
+
+
 const props = defineProps({
   isAnnual: {
     type: Boolean,
@@ -7,12 +14,11 @@ const props = defineProps({
   }
 })
 
-// Функція для очищення чисел від ком (напр. "1,188" -> 1188)
+
 const getNum = (val) => {
   if (!val) return 0;
   return Number(String(val).replace(/,/g, ''));
 }
-
 
 const plans = [
   {
@@ -71,6 +77,12 @@ const plans = [
     ]
   }
 ]
+
+
+const selectPlan = (plan) => {
+  store.setSubscription(plan, props.isAnnual)
+  router.push('/checkout')
+}
 </script>
 
 <template>
@@ -116,12 +128,12 @@ const plans = [
         </span>
       </div>
 
-      <NuxtLink
-        :to="`/checkout?planId=${plan.id}&billing=${isAnnual ? 'annual' : 'monthly'}`"
+      <button
+        @click="selectPlan(plan)"
         class="block w-full text-center py-3 bg-[#ff9900] hover:bg-[#e68a00] text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 mb-8 shadow-sm"
       >
         Try It Free
-      </NuxtLink>
+      </button>
 
       <ul class="space-y-4 flex-1">
         <li v-for="(feature, idx) in plan.features" :key="idx" class="flex items-start gap-3">

@@ -14,7 +14,7 @@ const props = defineProps({
   }
 })
 
-// Надійна функція, яка перетворює рядки з комами (напр. "2,988") у чисті числа (2988) для калькулятора
+
 const getNum = (val) => {
   if (!val) return 0;
   return Number(String(val).replace(/,/g, ''));
