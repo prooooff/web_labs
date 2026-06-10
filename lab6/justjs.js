@@ -41,3 +41,6 @@ let fruits = ["Яблуко", "Банан", "Апельсин"];
 fruits.push("Ківі");
 
 console.log("Список фруктів:", fruits);
+
+
+
