@@ -1,28 +1,25 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
-import { z } from 'zod'
+import * as z from 'zod/v4'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
 const route = useRoute()
 const router = useRouter()
 const id = route.params.id
 
-// Правила валідації Zod
 const schema = z.object({
   title: z.string().min(3, 'Назва має містити мінімум 3 символи'),
   slug: z.string().optional()
 })
 
-const state = reactive({
-  title: '',
-  slug: ''
-})
+type Schema = z.infer<typeof schema>
 
-// Отримуємо поточні дані категорії
+const state = reactive<Schema>({ title: '', slug: '' })
+
 const { data: response } = await useFetch<any>(`http://localhost/api/admin/blog/categories/${id}`, {
   lazy: true, server: false
 })
 
-// Заповнюємо форму, коли дані прийдуть
 watch(response, (newVal) => {
   if (newVal?.data) {
     state.title = newVal.data.title || ''
@@ -30,32 +27,34 @@ watch(response, (newVal) => {
   }
 }, { immediate: true })
 
-async function onSubmit(event: any) {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   await $fetch(`http://localhost/api/admin/blog/categories/${id}`, {
     method: 'PUT',
-    body: event.data
+    body: { ...event.data, parent_id: null }
   })
-  router.push('/BlogCategoriesUi') // Повертаємось до таблиці
+  router.push('/BlogCategoriesUi')
 }
 </script>
 
 <template>
   <div class="max-w-xl mx-auto py-12 px-4">
     <UCard>
-      <template #header><h2 class="font-bold text-xl">Редагування категорії</h2></template>
+      <template #header>
+        <h2 class="font-bold text-xl">Редагування категорії</h2>
+      </template>
 
       <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
-        <UFormGroup label="Назва категорії" name="title">
-          <UInput v-model="state.title" />
-        </UFormGroup>
+        <UFormField label="Назва категорії" name="title">
+          <UInput v-model="state.title" class="w-full" />
+        </UFormField>
 
-        <UFormGroup label="Slug" name="slug">
-          <UInput v-model="state.slug" />
-        </UFormGroup>
+        <UFormField label="Slug" name="slug">
+          <UInput v-model="state.slug" class="w-full" />
+        </UFormField>
 
-        <div class="flex gap-4 mt-4">
-          <UButton type="submit" color="emerald">Зберегти зміни</UButton>
-          <UButton to="/BlogCategoriesUi" color="gray" variant="ghost">Скасувати</UButton>
+        <div class="flex gap-3 pt-2">
+          <UButton type="submit" color="primary">Зберегти зміни</UButton>
+          <UButton to="/BlogCategoriesUi" color="neutral" variant="ghost">Скасувати</UButton>
         </div>
       </UForm>
     </UCard>
