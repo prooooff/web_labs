@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
-import * as z from 'zod/v4'
+import { z } from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
 const route = useRoute()
@@ -10,15 +10,16 @@ const id = route.params.id
 const { data: catResponse } = await useFetch<any>('http://localhost/api/admin/blog/categories', {
   lazy: true, server: false
 })
+
 const categoryOptions = computed(() =>
   (catResponse.value?.data || []).map((c: any) => ({ label: c.title, value: c.id }))
 )
 
 const schema = z.object({
-  title: z.string().min(5, 'Заголовок має містити мінімум 5 символів'),
+  title: z.string().min(5, 'Мінімум 5 символів'),
   slug: z.string().optional(),
-  category_id: z.number({ error: 'Оберіть категорію' }).min(1, 'Оберіть категорію'),
-  content_raw: z.string().min(10, 'Текст має бути довшим за 10 символів'),
+  category_id: z.number().min(1, 'Оберіть категорію'),
+  content_raw: z.string().min(10, 'Мінімум 10 символів'),
   is_published: z.boolean()
 })
 
@@ -62,7 +63,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <h2 class="font-bold text-xl">Редагування статті</h2>
       </template>
 
-      <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-5">
+      <UForm :schema="schema" :state="state" class="space-y-5" @submit="onSubmit">
         <UFormField label="Заголовок" name="title">
           <UInput v-model="state.title" class="w-full" />
         </UFormField>

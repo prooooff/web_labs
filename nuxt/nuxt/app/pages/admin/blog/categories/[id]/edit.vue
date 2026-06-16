@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
-import * as z from 'zod/v4'
+import { z } from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
 const route = useRoute()
@@ -8,7 +8,7 @@ const router = useRouter()
 const id = route.params.id
 
 const schema = z.object({
-  title: z.string().min(3, 'Назва має містити мінімум 3 символи'),
+  title: z.string().min(5, 'Мінімум 5 символів'),
   slug: z.string().optional()
 })
 
@@ -43,7 +43,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <h2 class="font-bold text-xl">Редагування категорії</h2>
       </template>
 
-      <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
+      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Назва категорії" name="title">
           <UInput v-model="state.title" class="w-full" />
         </UFormField>
